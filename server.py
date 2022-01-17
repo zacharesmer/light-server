@@ -1,6 +1,6 @@
 from flask import Flask
 import threading
-import lights
+import patterns
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -14,17 +14,17 @@ def hello_world():
 @app.route("/start")
 def pick_pattern():
     # TODO generate a list of available patterns with links to start them
-    return
+    return "Under construction"
 
-@app.route("/start/<p>")
-def start_pattern(p):
-    # there's probably an enormous security problem here
-    pattern = getattr(lights, p)
+@app.route("/start/<p>/", defaults={"r":0, "g":0, "b":0})
+@app.route("/start/<p>/<int:r>+<int:g>+<int:b>")
+def start_pattern(p, r, g, b):
     global run_lights 
-    # stop the current pattern
+    # stop the current pattern if it exists
     if run_lights is not None:
         stop_pattern()
-    run_lights = threading.Thread(target=pattern)
+    # run the pattern in a thread
+    run_lights = threading.Thread(target=patterns.pattern, args=[p, r, g, b])
     run_lights.start()
     return(f"<p>Started {escape(p)}</p>")
 
