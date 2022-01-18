@@ -11,6 +11,8 @@ pixels=neopixel.NeoPixel(board.D21, num_pixels, auto_write=False)
 dim = .95
 max_brightness = 50
 
+available_patterns = ["random_chase", "solid_chase", "rainbow_cycle", "fill"]
+
 gr = 0
 gg = 0
 gb = 0
@@ -19,6 +21,9 @@ def pattern(p, r, g, b):
     t = threading.current_thread()
     while(getattr(t, "do_run", True)):
         eval(p+"(r, g, b)")
+    blank()
+
+def blank():
     pixels.fill((0,0,0))
     pixels.show()
 

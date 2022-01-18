@@ -16,7 +16,7 @@ def pick_pattern():
     # TODO generate a list of available patterns with links to start them
     return "Under construction"
 
-@app.route("/start/<p>/", defaults={"r":0, "g":0, "b":0})
+@app.route("/start/<p>/", defaults={"r":50, "g":50, "b":50})
 @app.route("/start/<p>/<int:r>+<int:g>+<int:b>")
 def start_pattern(p, r, g, b):
     global run_lights 
@@ -24,6 +24,9 @@ def start_pattern(p, r, g, b):
     if run_lights is not None:
         stop_pattern()
     # run the pattern in a thread
+    # check if pattern is valid
+    if p not in patterns.available_patterns:
+        return("not today >:)")
     run_lights = threading.Thread(target=patterns.pattern, args=[p, r, g, b])
     run_lights.start()
     return(f"<p>Started {escape(p)}</p>")
@@ -39,3 +42,7 @@ def stop_pattern():
     except Exception as e:
         print(e)
         return("Nothing to stop.")
+        patterns.blank()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
