@@ -33,6 +33,7 @@ def start_pattern(p, r, g, b):
 
 @app.route("/stop")
 def stop_pattern():
+    patterns.blank()
     try:
         global run_lights
         run_lights.do_run = False
@@ -41,7 +42,6 @@ def stop_pattern():
         return("Stopped!")
     except Exception as e:
         print(e)
-        patterns.blank()
         return("Nothing to stop.")
 
 if __name__ == "__main__":
