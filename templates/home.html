@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Lights!</title>
-    <meta name="description" content="Control over some LEDs">
-    <meta name="author" content="SitePoint">
+    <meta name="description" content="Control some LEDs">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
@@ -37,7 +36,7 @@
 <script>
     ///////////////
     // color picker stuff usinng input type="color"
-    // kind of looks like shit on mobile
+    // kind of looks bad on mobile chrome
     var colorWell;
     var defaultColor = "#111111";
     var colorArr = [17, 17, 17];
@@ -61,7 +60,6 @@
     ////////////////
 
     function setPatternStuff(pattern) {
-        // window.location.href = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`
         const Http = new XMLHttpRequest();
         const url = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`;
         Http.open("GET", url);
@@ -86,12 +84,10 @@
                     onClick: function () { } // Callback after click
                 }).showToast();
             }
-
         }
     }
 
     function stop() {
-        // window.location.href = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`
         const Http = new XMLHttpRequest();
         const url = `/stop`;
         Http.open("GET", url);
@@ -116,10 +112,9 @@
                     onClick: function () { } // Callback after click
                 }).showToast();
             }
-
         }
-
     }
+
 </script>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
