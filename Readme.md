@@ -1,14 +1,11 @@
-This is a work-in-progress simple python server to run on a raspberry pi and control the connected LEDs. 
+# Light-server
+This is a work-in-progress python server to run on a raspberry pi and control the connected LEDs. 
 
 ## Instructions for use:
 
 (Optional) Use a virtual environment
-Initial Setup:
 ```
 python -m venv env
-```
-Activation:
-```
 . env/bin/activate
 ```
 
