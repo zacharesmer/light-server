@@ -35,7 +35,7 @@
 
 <script>
     ///////////////
-    // color picker stuff usinng input type="color"
+    // color picker stuff using input type="color"
     // kind of looks bad on mobile chrome
     var colorWell;
     var defaultColor = "#111111";
@@ -47,7 +47,6 @@
         colorWell = document.querySelector("#colorWell");
         colorWell.value = defaultColor;
         colorWell.addEventListener("input", updateFirst, false);
-        colorWell.addEventListener("change", updateAll, false);
         colorWell.select();
     }
 

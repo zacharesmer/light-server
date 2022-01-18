@@ -13,8 +13,7 @@ def hello_world():
 
 @app.route("/start")
 def pick_pattern():
-    # TODO generate a list of available patterns with links to start them
-    return "Under construction"
+    return ":)"
 
 @app.route("/start/<p>/", defaults={"r":50, "g":50, "b":50})
 @app.route("/start/<p>/<int:r>+<int:g>+<int:b>")

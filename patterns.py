@@ -43,7 +43,7 @@ def solid_chase(r, g, b):
 def rainbow_chase(r, g, b):
     s = 1.0
     v = 1.0
-    # this could be a for loop but it has to be interruptable by the server
+    # this should probably be changed 
     global h
     rgb = colorsys.hsv_to_rgb(h/255, s, v)
     for j in range(num_pixels):
@@ -59,7 +59,7 @@ def rainbow_chase(r, g, b):
 def rainbow_cycle(r, g, b):
     s = 1.0
     v = 1.0
-    # this could be a for loop but it has to be interruptable by the server
+    # this should probably be changed
     global h
     if h>255:
         h=0
