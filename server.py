@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import threading
 import patterns
 from markupsafe import escape
@@ -9,7 +9,7 @@ run_lights = None
 
 @app.route("/")
 def hello_world():
-    return("<p>Hello, world!</p>")
+    return(render_template("home.html", available_patterns=patterns.available_patterns))
 
 @app.route("/start")
 def pick_pattern():
@@ -29,7 +29,7 @@ def start_pattern(p, r, g, b):
         return("not today >:)")
     run_lights = threading.Thread(target=patterns.pattern, args=[p, r, g, b])
     run_lights.start()
-    return(f"<p>Started {escape(p)}</p>")
+    return(f"Started {escape(p)}")
 
 @app.route("/stop")
 def stop_pattern():
