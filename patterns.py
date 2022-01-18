@@ -4,6 +4,7 @@ import random
 import math
 import threading
 import time
+import colorsys
 
 num_pixels = 100
 pixels=neopixel.NeoPixel(board.D21, num_pixels, auto_write=False)
@@ -12,10 +13,6 @@ dim = .95
 max_brightness = 50
 
 available_patterns = ["random_chase", "solid_chase", "rainbow_cycle", "fill"]
-
-gr = 0
-gg = 0
-gb = 0
 
 def pattern(p, r, g, b):
     t = threading.current_thread()
@@ -42,11 +39,13 @@ def solid_chase(r, g, b):
         pixels.show()
 
 def rainbow_cycle(r, g, b):
-    global gr, gg, gb
-    # TODO actually change r, g, and b to make a rainbow
-    pixels.fill((gr, gb, gg))
-    pixels.show()
-    time.sleep(.1)
+    s = 1.0
+    v = 1.0
+    for h in range(255):
+        rgb = colorsys.hsv_to_rgb(h/255, s, v)
+        pixels.fill(((math.floor(rgb[0]*255)), (math.floor(rgb[1]*255)), (math.floor(rgb[2]*255))))
+        time.sleep(.05)
+        pixels.show()
 
 def fill(r, g, b):
     pixels.fill((r, b, g))

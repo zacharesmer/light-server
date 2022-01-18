@@ -41,8 +41,8 @@ def stop_pattern():
         return("Stopped!")
     except Exception as e:
         print(e)
-        return("Nothing to stop.")
         patterns.blank()
+        return("Nothing to stop.")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
