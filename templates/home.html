@@ -26,70 +26,69 @@
         <button type="button" class="btn btn-primary" onclick="setPatternStuff('{{pattern}}')">{{ pattern
             }}</button>
         {% endfor %}
-        <button id="stop" class="btn btn-primary" onclick="stop()">Stop</button>
+        <button id="stop" class="btn btn-danger" onclick="stop()">Stop</button>
     </div>
     <div>
-      <input type="color" id="colorWell" name="colorWell"
-             value="#aa2200">
-      <label for="lights">Pick a color</label>
+        <input type="color" id="colorWell" name="colorWell" value="#aa2200">
+        <label for="lights">Pick a color</label>
     </div>
 </body>
 
 <script>
-  ///////////////
-  // color picker stuff
-  var colorWell;
-  var defaultColor = "#aa2211";
-  var colorArr = [170, 34, 17];
+    ///////////////
+    // color picker stuff usinng input type="color"
+    // kind of looks like shit on mobile
+    var colorWell;
+    var defaultColor = "#111111";
+    var colorArr = [17, 17, 17];
 
-  window.addEventListener("load", startup, false);
+    window.addEventListener("load", startup, false);
 
-  function startup() {
-    colorWell = document.querySelector("#colorWell");
-    colorWell.value = defaultColor;
-    colorWell.addEventListener("input", updateFirst, false);
-    colorWell.addEventListener("change", updateAll, false);
-    colorWell.select();
-  }
+    function startup() {
+        colorWell = document.querySelector("#colorWell");
+        colorWell.value = defaultColor;
+        colorWell.addEventListener("input", updateFirst, false);
+        colorWell.addEventListener("change", updateAll, false);
+        colorWell.select();
+    }
 
-  function updateFirst(event) {
-    // update colorArr to reflect the value picked
-    var colorString =  event.target.value;
-    var colorStringArr = [colorString.substring(1, 3), colorString.substring(3, 5), colorString.substring(5, 7)];
-    colorArr = colorStringArr.map(x => parseInt(x, 16));
-    console.log(colorArr);
-  }
-  ////////////////
+    function updateFirst(event) {
+        // update colorArr to reflect the value picked
+        var colorString = event.target.value;
+        var colorStringArr = [colorString.substring(1, 3), colorString.substring(3, 5), colorString.substring(5, 7)];
+        colorArr = colorStringArr.map(x => parseInt(x, 16));
+    }
+    ////////////////
 
-  function setPatternStuff(pattern) {
-      // window.location.href = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`
-      const Http = new XMLHttpRequest();
-      const url = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`;
-      Http.open("GET", url);
-      Http.send();
+    function setPatternStuff(pattern) {
+        // window.location.href = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`
+        const Http = new XMLHttpRequest();
+        const url = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`;
+        Http.open("GET", url);
+        Http.send();
 
-      Http.onreadystatechange = (e) => {
+        Http.onreadystatechange = (e) => {
 
-          if (Http.readyState === XMLHttpRequest.DONE) {
-              console.log(Http.responseText)
+            if (Http.readyState === XMLHttpRequest.DONE) {
+                console.log(Http.responseText)
 
-              Toastify({
-                  text: Http.responseText,
-                  duration: 1000,
-                  newWindow: true,
-                  close: true,
-                  gravity: "bottom", // `top` or `bottom`
-                  position: "right", // `left`, `center` or `right`
-                  stopOnFocus: true, // Prevents dismissing of toast on hover
-                  style: {
-                      background: "linear-gradient(to right, #00b09b, #96c93d)",
-                  },
-                  onClick: function () { } // Callback after click
-              }).showToast();
-          }
+                Toastify({
+                    text: Http.responseText,
+                    duration: 1000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "bottom", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
 
-      }
-  }
+        }
+    }
 
     function stop() {
         // window.location.href = `/start/${pattern}/${colorArr[0]}+${colorArr[1]}+${colorArr[2]}`
