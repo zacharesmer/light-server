@@ -14,7 +14,7 @@ Install the requirements
 pip install -r requirements.txt
 ```
 
-Run the server
+Run the server (note: it is useful to use something like [screen](https://www.gnu.org/software/screen/) if you're controlling the pi via SSH)
 ```
 sudo python3 server.py
 ```
