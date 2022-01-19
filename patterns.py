@@ -5,6 +5,7 @@ import math
 import threading
 import time
 import colorsys
+import datetime
 
 num_pixels = 100
 pixels=neopixel.NeoPixel(board.D21, num_pixels, auto_write=False)
@@ -14,7 +15,7 @@ max_brightness = 50
 
 h=0
 
-available_patterns = ["random_chase", "solid_chase", "rainbow_chase", "rainbow_cycle", "fill", "rainbow_fill"]
+available_patterns = ["random_chase", "solid_chase", "rainbow_chase", "rainbow_cycle", "fill", "rainbow_fill", "rainbow_scroll", "clock"]
 
 def pattern(p, r, g, b):
     t = threading.current_thread()
@@ -83,10 +84,39 @@ def rainbow_fill(r, g, b):
                 break
     pixels.show()
 
+def rainbow_scroll(r, g, b):
+    s = 1.0
+    v = max_brightness/255
+    h_offset = round(time.time()*25)
+
+    for pixel_ind in range(num_pixels):
+        rgb = colorsys.hsv_to_rgb(((h_offset + pixel_ind) % 255)/255, s, v)
+        pixels[pixel_ind] = ((math.floor(rgb[0]*255)), (math.floor(rgb[1]*255)), (math.floor(rgb[2]*255)))
+    pixels.show()
+     
+def clock(r, g, b):
+    leds_on = math.floor(timedelta_percentage(datetime.datetime.now()) * num_pixels)
+    led_blink_index = math.ceil(timedelta_percentage(datetime.datetime.now()) * num_pixels)
+
+    blink_status_on = round(time.time()) % 2 == 1
+    
+    for pixel_ind in range(leds_on):
+        pixels[pixel_ind] = (r,g,b)
+    if blink_status_on:
+        pixels[led_blink_index-1] = (r,g,b)
+    else:
+        pixels[led_blink_index-1] = (0,0,0)
+    pixels.show()
+
 
 def fill(r, g, b):
     pixels.fill((r, b, g))
     pixels.show()
+
+def timedelta_percentage(input_datetime):
+    d = input_datetime - datetime.datetime.combine(input_datetime.date(), datetime.time())
+    return d.total_seconds() / 86400.0
+
 
 if __name__ == "__main__":
     random_chase(0, 0, 0)
