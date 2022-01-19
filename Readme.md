@@ -14,9 +14,9 @@ Install the requirements
 pip install -r requirements.txt
 ```
 
-Run the server (note: it is useful to use something like [screen](https://www.gnu.org/software/screen/) if you're controlling the pi via SSH)
+Run the server (there is also a helper script `start_server.sh` that activates the virtual environment, runs the server, and starts an ngrok tunnel)
 ```
-sudo python3 server.py
+nohup sudo python3 server.py &
 ```
 
 Access the web interface on the local network at 
