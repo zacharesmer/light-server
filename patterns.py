@@ -101,9 +101,9 @@ def clock(r, g, b):
     blink_status_on = round(time.time()) % 2 == 1
     
     for pixel_ind in range(leds_on):
-        pixels[pixel_ind] = (r,g,b)
+        pixels[pixel_ind] = (r,b,g)
     if blink_status_on:
-        pixels[led_blink_index-1] = (r,g,b)
+        pixels[led_blink_index-1] = (r,b,g)
     else:
         pixels[led_blink_index-1] = (0,0,0)
     pixels.show()
