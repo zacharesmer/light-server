@@ -14,9 +14,13 @@ Install the requirements
 pip install -r requirements.txt
 ```
 
-Run the server (there is also a helper script `start_server.sh` that activates the virtual environment, runs the server, and starts an ngrok tunnel)
+Run the server 
 ```
 nohup sudo python3 server.py &
+```
+Alternatively, there is a helper script `server.sh` that activates the virtual environment, runs the server, and starts an ngrok tunnel. It can also be called with stop to stop the server and ngrok.
+```
+bash server.sh start
 ```
 
 Access the web interface on the local network at 
