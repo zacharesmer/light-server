@@ -32,7 +32,7 @@ def start_pattern(p, r, g, b):
         run_lights = threading.Thread(target=patterns.pattern, args=[p, r, g, b])
         run_lights.start()
         return(f"Started {escape(p)}")
-    return("something bad has happened")
+    return("old pattern not stopped successfully")
 
 @app.route("/stop")
 def stop_pattern():
