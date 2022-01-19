@@ -20,15 +20,19 @@ def pick_pattern():
 def start_pattern(p, r, g, b):
     global run_lights 
     # stop the current pattern if it exists
+    # TODO: the old pattern is not always stopping before the new pattern
     if run_lights is not None:
         stop_pattern()
-    # run the pattern in a thread
     # check if pattern is valid
     if p not in patterns.available_patterns:
         return("not today >:)")
-    run_lights = threading.Thread(target=patterns.pattern, args=[p, r, g, b])
-    run_lights.start()
-    return(f"Started {escape(p)}")
+    # Verify that the old pattern has actually stopped
+    # If it has, run the new pattern in a thread
+    if run_lights is None:
+        run_lights = threading.Thread(target=patterns.pattern, args=[p, r, g, b])
+        run_lights.start()
+        return(f"Started {escape(p)}")
+    return("something bad has happened")
 
 @app.route("/stop")
 def stop_pattern():
@@ -38,9 +42,11 @@ def stop_pattern():
         run_lights.do_run = False
         run_lights.join()
         run_lights = None
+        patterns.blank()
         return("Stopped!")
     except Exception as e:
         print(e)
+        patterns.blank()
         return("Nothing to stop.")
 
 if __name__ == "__main__":
