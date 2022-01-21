@@ -7,6 +7,8 @@ import time
 import colorsys
 import datetime
 
+import pdb
+
 class Lights:
     '''
     A class to hold patterns of lights and a NeoPixel instance. 
@@ -30,13 +32,14 @@ class Lights:
         self.hue=0
 
     def start_pattern(self, p, r, g, b):
+        self.stop.clear()
         self.thread = threading.Thread(target=self.pattern, args=[p, r, g, b])
         self.thread.start()
-        self.stop.clear()
 
     def pattern(self, p, r, g, b):
-        while(not self.stop):
-            eval(p+"(self, r, g, b)")
+        while(not self.stop.is_set()):
+            # run the pattern p
+            getattr(self, p)(r, g, b)
         self.blank()
 
     def fill(self, r, g, b):
