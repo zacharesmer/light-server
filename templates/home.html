@@ -56,6 +56,7 @@
         colorWell.select();
         
         brightness = document.getElementById("#brightness-slider");
+        brightness.addEventListener("change", updateBrightness, false);
     }
 
     function updateColor(event) {
@@ -65,9 +66,9 @@
         colorArr = colorStringArr.map(x => parseInt(x, 16));
     }
 
-    brightness.oninput = function(){
-        var brightness-value = document.getElementById("brightness-value");
-        brightness-value.innerHTML = brightness.value;
+    function updateBrightness(event){
+        var brightnessValue = document.getElementById("brightness-value");
+        brightnessValue.innerHTML = brightness.value;
         const Http = new XMLHttpRequest();
         const url = `/brightness/${brightness.value}`;
         Http.open("GET", url);

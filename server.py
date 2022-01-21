@@ -17,7 +17,7 @@ def pick_pattern():
 @app.route("/start/<p>/<int:r>+<int:g>+<int:b>")
 def start_pattern(p, r, g, b):
     # if lights are not stopped, stop them
-    if not lights.stop:
+    if not lights.stop.is_set():
         stop_pattern()
     # check if pattern is valid
     if p not in lights.available_patterns:
@@ -25,7 +25,7 @@ def start_pattern(p, r, g, b):
     # Verify that the old pattern has actually stopped
     # If it has, run the new pattern in a thread
     if lights.thread is None:
-        lights.thread = threading.Thread(target=lights.pattern, args=[lights, p, r, g, b])
+        lights.thread = threading.Thread(target=lights.pattern, args=[p, r, g, b])
         lights.thread.start()
         lights.stop.clear()
         return(f"Started {escape(p)}")
