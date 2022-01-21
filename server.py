@@ -51,6 +51,7 @@ def stop_pattern():
 def set_brightness(brightness):
     if (brightness < 256 and brightness >=0):
         light_driver.max_brightness = brightness
+        light_driver.brightness_mult = brightness/255
     return "Brightness adjusted"
 
 if __name__ == "__main__":

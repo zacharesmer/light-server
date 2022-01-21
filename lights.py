@@ -17,6 +17,7 @@ class Lights:
     def __init__(self, num_pixels, max_brightness):
         self.num_pixels = num_pixels
         self.max_brightness = max_brightness
+        self.brightness_mult = max_brightness/255
 
         # defaults to False, waits to become True
         self.stop = threading.Event()
@@ -25,11 +26,12 @@ class Lights:
         # this will hold the thread the lights are currently running in
         self.thread = None
 
-        self.pixels=neopixel.NeoPixel(board.D21, num_pixels, auto_write=False)
+        self.pixels=neopixel.NeoPixel(board.D21, num_pixels, auto_write=False, pixel_order="BGR")
         self.available_patterns = ["random_chase", "solid_chase", "rainbow_chase", "rainbow_cycle", "fill", "rainbow_fill", "rainbow_scroll", "clock"]
 
-        self.dim = .95
-        self.hue=0
+        # multiplier for fade out
+        self.dim_amount = .95
+        self.hue = 0.0
 
     def start_pattern(self, p, r, g, b):
         self.stop.clear()
@@ -43,46 +45,49 @@ class Lights:
         self.blank()
 
     def fill(self, r, g, b):
-        self.pixels.fill((r, b, g))
+        self.pixels.fill((r, g, b))
         self.pixels.show()
 
     def blank(self):
         self.pixels.fill((0,0,0))
         self.pixels.show()
 
+    def dim_one(self, i):
+        self.pixels[i] = (math.floor(self.dim_amount * self.pixels[i][0]), math.floor(self.dim_amount * self.pixels[i][1]), math.floor(self.dim_amount * self.pixels[i][2]))
+
+    def dim_all(self):
+        for i in range(self.num_pixels):
+            self.dim_one(i)
+
     def random_chase(self, r, g, b):
         for j in range(self.num_pixels):
-            self.self.pixels[j] = (random.randint(0, max_brightness), random.randint(0, max_brightness),random.randint(0, max_brightness))
-            for i in range(self.num_pixels):
-                self.self.pixels[i] = (math.floor(self.dim * self.pixels[i][0]),  math.floor(self.dim * self.pixels[i][1]), math.floor(self.dim * self.pixels[i][2]))
+            self.pixels[j] = (random.randint(0, self.max_brightness), random.randint(0, self.max_brightness),random.randint(0, self.max_brightness))
+            self.dim_all()
             self.pixels.show()
 
     def solid_chase(self, r, g, b):
         for j in range(self.num_pixels):
-            self.pixels[j] = (r, b, g)
-            for i in range(self.num_pixels):
-                self.pixels[i] = (math.floor(self.dim * self.pixels[i][0]),  math.floor(self.dim * self.pixels[i][1]), math.floor(self.dim * self.pixels[i][2]))
+            self.pixels[j] = (r, g, b)
+            self.dim_all()
             self.pixels.show()
 
     def rainbow_chase(self, r, g, b):
         sat = 1.0
-        val = max_brightness/255
-        rgb = colorsys.hsv_to_rgb(self.hue, s, v)
+        val = self.brightness_mult
+        rgb = colorsys.hsv_to_rgb(self.hue, sat, val)
         for j in range(self.num_pixels):
             self.pixels[j] = ((math.floor(rgb[0]*255)), (math.floor(rgb[1]*255)), (math.floor(rgb[2]*255)))
             for i in range(self.num_pixels):
-                self.pixels[i] = (math.floor(self.dim * self.pixels[i][0]),  
-                        math.floor(self.dim * self.pixels[i][1]), math.floor(self.dim * self.pixels[i][2]))
+                self.dim_one(i)
                 if self.hue > 1:
                     self.hue = 0
                 self.hue += .0003
-                rgb = colorsys.hsv_to_rgb(self.hue, s, v)
+                rgb = colorsys.hsv_to_rgb(self.hue, sat, val)
             self.pixels.show()
-
 
     def rainbow_cycle(self, r, g, b):
         sat = 1.0
-        val = self.max_brightness/255
+        val = self.brightness_mult
         if self.hue > 1:
             self.hue =0
         self.hue += .0001
@@ -92,12 +97,12 @@ class Lights:
         self.pixels.show()
 
     def rainbow_fill(self, r, g, b):
-        s = 1.0
-        v = self.max_brightness/255
+        sat = 1.0
+        val = self.brightness_mult
         i = 0
         while(i<self.num_pixels):
             for h in range(0, 255, 2):
-                rgb = colorsys.hsv_to_rgb(h/255, s, v)
+                rgb = colorsys.hsv_to_rgb(h/255, sat, val)
                 self.pixels[i] = ((math.floor(rgb[0]*255)), (math.floor(rgb[1]*255)), (math.floor(rgb[2]*255)))
                 i += 1
                 if i >= self.num_pixels:
@@ -105,12 +110,12 @@ class Lights:
         self.pixels.show()
 
     def rainbow_scroll(self, r, g, b):
-        s = 1.0
-        v = self.max_brightness/255
+        sat = 1.0
+        val = self.brightness_mult
         h_offset = round(time.time()*25)
 
         for pixel_ind in range(self.num_pixels):
-            rgb = colorsys.hsv_to_rgb(((h_offset + pixel_ind) % 255)/255, s, v)
+            rgb = colorsys.hsv_to_rgb(((h_offset + pixel_ind) % 255)/255, sat, val)
             self.pixels[pixel_ind] = ((math.floor(rgb[0]*255)), (math.floor(rgb[1]*255)), (math.floor(rgb[2]*255)))
         self.pixels.show()
          
@@ -121,9 +126,9 @@ class Lights:
         blink_status_on = round(time.time()) % 2 == 1
         
         for pixel_ind in range(leds_on):
-            self.pixels[pixel_ind] = (r,b,g)
+            self.pixels[pixel_ind] = (r,g,b)
         if blink_status_on:
-            self.pixels[led_blink_index-1] = (r,b,g)
+            self.pixels[led_blink_index-1] = (r,g,b)
         else:
             self.pixels[led_blink_index-1] = (0,0,0)
         self.pixels.show()
