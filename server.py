@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return render_template("home.html", available_patterns=lights.available_patterns)
+    return render_template("home.html", available_patterns=light_driver.available_patterns)
 
 @app.route("/start")
 def pick_pattern():
@@ -17,43 +17,41 @@ def pick_pattern():
 @app.route("/start/<p>/<int:r>+<int:g>+<int:b>")
 def start_pattern(p, r, g, b):
     # if lights are not stopped, stop them
-    if not lights.stop.is_set():
+    if not light_driver.stop.is_set():
         stop_pattern()
     # check if pattern is valid
-    if p not in lights.available_patterns:
+    if p not in light_driver.available_patterns:
         return("not today >:)")
     # Verify that the old pattern has actually stopped
     # If it has, run the new pattern in a thread
-    if lights.thread is None:
-        lights.thread = threading.Thread(target=lights.pattern, args=[p, r, g, b])
-        lights.thread.start()
-        lights.stop.clear()
+    if light_driver.thread is None:
+        light_driver.start_pattern(p, g, r, b)
         return(f"Started {escape(p)}")
     return("old pattern not stopped successfully")
 
 @app.route("/stop")
 def stop_pattern():
-    lights.blank()
+    light_driver.blank()
     try:
-        lights.stop.set()
+        light_driver.stop.set()
         # join the thread to wait for it to finish
-        lights.thread.join()
+        light_driver.thread.join()
         # now there's no more thread so update the variable to point to None
-        lights.thread = None
+        light_driver.thread = None
         # turn off all the lights
-        lights.blank()
+        light_driver.blank()
         return("Stopped!")
     except Exception as e:
         # There might be an exception if there is no thread active
         print(e)
-        lights.blank()
+        light_driver.blank()
         return("Nothing to stop.")
 
 @app.route("/brightness/<int:brightness>")
 def set_brightness(brightness):
     if (brightness < 256 and brightness >=0):
-        lights.max_brightness = brightness
+        light_driver.max_brightness = brightness
 
 if __name__ == "__main__":
-    lights = lights.Lights(num_pixels=100, max_brightness=255)
+    light_driver = lights.Lights(num_pixels=100, max_brightness=255)
     app.run(host="0.0.0.0", port=5000, debug=True)

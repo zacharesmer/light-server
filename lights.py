@@ -29,6 +29,10 @@ class Lights:
         self.dim = .95
         self.hue=0
 
+    def start_pattern(self, p, r, g, b):
+        self.thread = threading.Thread(target=self.pattern, args=[p, r, g, b])
+        self.thread.start()
+        self.stop.clear()
 
     def pattern(self, p, r, g, b):
         while(not self.stop):
