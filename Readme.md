@@ -30,8 +30,9 @@ Access the web interface on the local network at
 
 ## Other notes
 
-Add more patterns in lights.py. Any pattern function must have an entry in the `available_patterns` whitelist, which will also generate a button for it. Each pattern is run in a new thread, and when the stop button is pressed, the server updates a flag that is checked in a while loop surrounding the pattern function. Because of this, long-running pattern functions will not stop correctly, so try to keep the repeating unit short.
+Add more patterns in lights.py. Any pattern function must have an entry in the `available_patterns` whitelist, which will also generate a button for it. Each pattern is run in a new thread, and when the stop button is pressed, the server updates an event that is checked in a while loop surrounding the pattern function. Because of this, long-running pattern functions will not stop correctly, so try to keep the repeating unit short.
 
 ## Plans
+- Make brightness slider work with all the patterns
 - Make the server something more legit and hardened than a flask development server
 - Connect some Google smart home actions to control the lights
